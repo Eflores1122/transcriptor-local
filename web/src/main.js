@@ -2,6 +2,7 @@ import '@fontsource-variable/inter/index.css';
 import '@fontsource/ibm-plex-mono/latin-400.css';
 import './style.css';
 import { download, exportResult, filename, time } from './export.js';
+import exampleAudio from './assets/ejemplo.wav?inline';
 
 const get = (id) => document.getElementById(id);
 const files = get('files');
@@ -16,7 +17,6 @@ const status = get('status');
 const settings = ['language', 'model', 'format'].map(get);
 const items = [];
 let currentRun;
-let fetchingDemo = false;
 let worker;
 
 function element(tag, text, className) {
@@ -37,10 +37,10 @@ function updateControls() {
   const busy = Boolean(currentRun);
   const count = items.length;
   get('count').textContent = `${count} ${count === 1 ? 'archivo' : 'archivos'} en cola`;
-  start.disabled = busy || fetchingDemo || !items.some((item) => !item.result);
+  start.disabled = busy || !items.some((item) => !item.result);
   cancel.hidden = !busy;
   files.disabled = busy;
-  demo.disabled = busy || fetchingDemo;
+  demo.disabled = busy;
   drop.classList.toggle('busy', busy);
   for (const select of settings) select.disabled = busy;
   for (const item of items) item.remove.disabled = busy;
@@ -87,20 +87,10 @@ drop.addEventListener('drop', (event) => {
   addFiles(event.dataTransfer.files);
 });
 
-demo.addEventListener('click', async () => {
-  fetchingDemo = true;
-  updateControls();
-  try {
-    const response = await fetch(new URL('./ejemplo.wav', document.baseURI));
-    if (!response.ok) throw new Error('No se pudo abrir el audio de ejemplo.');
-    addFiles([new File([await response.blob()], 'ejemplo.wav', { type: 'audio/wav', lastModified: 0 })]);
-    status.textContent = '';
-  } catch (error) {
-    status.textContent = error.message;
-  } finally {
-    fetchingDemo = false;
-    updateControls();
-  }
+demo.addEventListener('click', () => {
+  const audio = Uint8Array.from(atob(exampleAudio.split(',')[1]), (byte) => byte.charCodeAt(0));
+  addFiles([new File([audio], 'ejemplo.wav', { type: 'audio/wav', lastModified: 0 })]);
+  status.textContent = '';
 });
 
 async function decode(file) {
