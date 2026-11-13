@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Convierte audio o vídeo en texto con Whisper desde tu navegador y descarga la transcripción como PDF o JSON.">
+  <link rel="icon" type="image/png" href="./icon.png">
+  <title>Transcriptor local</title>
+</head>
+<body>
+  <header class="top"><div class="wrap top-inner">
+    <span class="brand"><span class="signal" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>Transcriptor local</span>
+    <span class="local"><span aria-hidden="true"></span>Procesamiento en tu equipo</span>
+  </div></header>
+  <main class="wrap">
+    <section class="intro" aria-labelledby="title">
+      <h1 id="title">De audio a texto.</h1>
+      <p>Transcribe tus audios y vídeos con Whisper. Descarga el texto con marcas de tiempo en PDF o JSON.</p>
+    </section>
+    <div class="workspace">
+      <section class="files" aria-labelledby="files-heading">
+        <h2 id="files-heading">Archivos de origen</h2>
+        <label id="drop" class="drop">
+          <input id="files" type="file" multiple accept="audio/*,video/*,.mkv,.avi,.m4v,.flac,.ogg" aria-label="Elegir archivos">
+          <span class="drop-icon" aria-hidden="true">＋</span>
+          <strong>Elegir archivos</strong>
+          <span>o arrastra audio y vídeo aquí</span>
+          <small>WAV, MP3, M4A, MP4 y otros formatos compatibles</small>
+        </label>
+        <div class="queue-head"><span id="count">0 archivos en cola</span><button class="text-button" type="button" id="demo">Usar audio de ejemplo</button></div>
+        <ul id="queue" class="queue" aria-label="Cola de archivos"></ul>
+      </section>
+      <section class="settings" aria-labelledby="settings-heading">
+        <h2 id="settings-heading">Ajustes</h2>
+        <label for="language">Idioma hablado</label>
+        <select id="language"><option value="">Detección automática</option><option value="es">Español</option><option value="en">Inglés</option><option value="fr">Francés</option><option value="de">Alemán</option><option value="it">Italiano</option><option value="pt">Portugués</option><option value="ja">Japonés</option><option value="zh">Chino</option></select>
+        <label for="model">Modelo Whisper</label>
+        <select id="model"><option value="tiny">Tiny · más rápido</option><option value="base">Base · más precisión</option></select>
+        <label for="format">Formato de salida</label>
+        <select id="format"><option value="pdf">PDF</option><option value="json">JSON</option></select>
+        <button id="start" class="primary" type="button" disabled>Iniciar transcripción</button>
+        <button id="cancel" class="secondary" type="button" hidden>Detener</button>
+        <p class="hint">La primera ejecución descarga el modelo. Los archivos se procesan en el navegador.</p>
+      </section>
+    </div>
+    <section class="activity" aria-label="Progreso de la transcripción">
+      <progress id="progress" max="1" aria-label="Progreso del archivo actual" hidden></progress>
+      <p id="status" role="status" aria-live="polite"></p>
+      <button id="zip" class="secondary" type="button" hidden>Descargar resultados en ZIP</button>
+    </section>
+  </main>
+  <footer class="wrap">Para grabaciones de varias horas, consulta la edición de escritorio en el <a href="https://github.com/Eflores1122/transcriptor-local">repositorio de GitHub</a>.</footer>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
